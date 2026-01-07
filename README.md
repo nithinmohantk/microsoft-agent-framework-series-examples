@@ -318,6 +318,15 @@ Enterprise Solution Architect | Azure | AI/ML | .NET | Python
 - GitHub: [@nithinmohantk](https://github.com/nithinmohantk)
 - LinkedIn: [nithinmohantk](https://linkedin.com/in/nithinmohantk)
 
+## 🎁 Bonus Examples
+
+We have included additional implementations for other ecosystems in this repository:
+
+- 📂 **[TypeScript / Node.js](./bonus-typescript)**: Examples using the Azure OpenAI SDK for Node.js.
+- 📂 **[Go](./bonus-go)**: Examples using the `go-openai` library.
+
+> *Note: These are conceptual implementations to demonstrate the patterns in other languages. The core Microsoft Agent Framework is primarily for Python and .NET.*
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
