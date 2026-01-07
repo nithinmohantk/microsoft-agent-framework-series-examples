@@ -320,10 +320,15 @@ Enterprise Solution Architect | Azure | AI/ML | .NET | Python
 
 ## 🎁 Bonus Examples
 
-We have included additional implementations for other ecosystems in this repository:
+We have included additional implementations for other ecosystems in this repository. 
 
-- 📂 **[TypeScript / Node.js](./bonus-typescript)**: Examples using the Azure OpenAI SDK for Node.js.
-- 📂 **[Go](./bonus-go)**: Examples using the `go-openai` library.
+You can find **TypeScript** and **Go** examples within each `part-XX` folder alongside Python and .NET.
+- `part-XX/typescript/`
+- `part-XX/go/`
+
+We also have centralized bonus sections:
+- 📂 **[TypeScript / Node.js](./bonus-typescript)**
+- 📂 **[Go](./bonus-go)**
 
 > *Note: These are conceptual implementations to demonstrate the patterns in other languages. The core Microsoft Agent Framework is primarily for Python and .NET.*
 
