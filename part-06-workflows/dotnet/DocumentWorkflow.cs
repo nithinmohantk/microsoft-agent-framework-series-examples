@@ -6,7 +6,7 @@ using OpenAI;
 namespace MAF.Part06.Workflows;
 
 /// <summary>
-/// Part 6: Document Processing Workflow in .NET
+/// Part 6: Document Processing Workflow in .NET (Updated with Conditional Logic)
 /// </summary>
 public class DocumentWorkflow
 {
@@ -19,33 +19,12 @@ public class DocumentWorkflow
         var responseClient = client.GetOpenAIResponseClient("gpt-4o");
 
         // Create specialized agents
-        var classifier = responseClient.CreateAIAgent(
-            name: "DocumentClassifier",
-            instructions: @"
-                Classify documents into categories:
-                - invoice: Bills, payment requests
-                - contract: Legal agreements
-                - report: Analysis documents
-                - correspondence: Letters, emails
-                Return ONLY the category name.");
-
-        var extractor = responseClient.CreateAIAgent(
-            name: "DataExtractor",
-            instructions: @"
-                Extract key fields based on document type:
-                - invoice: vendor, amount, date, invoice_number
-                - contract: parties, effective_date, terms
-                - report: title, date, key_findings
-                Return data as structured JSON.");
-
-        var validator = responseClient.CreateAIAgent(
-            name: "DataValidator",
-            instructions: @"
-                Validate extracted data for:
-                - Completeness
-                - Format correctness
-                - Logical consistency
-                Return validation result.");
+        var classifier = responseClient.CreateAIAgent("Classifier", "Classify: invoice, contract, report");
+        var extractor = responseClient.CreateAIAgent("Extractor", "Extract fields");
+        var validator = responseClient.CreateAIAgent("Validator", "Validate data");
+        
+        // Handling special cases
+        var specialHandler = responseClient.CreateAIAgent("SpecialHandler", "Handle high priority docs");
 
         // Build workflow
         var builder = new WorkflowBuilder();
@@ -53,9 +32,23 @@ public class DocumentWorkflow
         builder.AddExecutor(classifier);
         builder.AddExecutor(extractor);
         builder.AddExecutor(validator);
+        builder.AddExecutor(specialHandler);
 
-        builder.AddEdge(classifier, extractor);
+        // Standard Flow
         builder.AddEdge(extractor, validator);
+
+        // Conditional Flow from Classifier
+        builder.AddConditionalEdge(
+            source: classifier,
+            destination: extractor,
+            condition: result => 
+                result.ToString().Contains("invoice") || 
+                result.ToString().Contains("contract"));
+
+        builder.AddConditionalEdge(
+            source: classifier,
+            destination: specialHandler,
+            condition: result => result.ToString().Contains("urgent"));
 
         builder.SetStartExecutor(classifier);
 
@@ -63,18 +56,7 @@ public class DocumentWorkflow
 
         // Run workflow
         Console.WriteLine("Processing document...");
-        var result = await workflow.RunAsync(@"
-            INVOICE #INV-2025-001
-
-            From: TechCorp Solutions
-            To: Acme Industries
-            Date: January 15, 2025
-
-            Services: Cloud Setup $5,000
-            Total: $5,000
-            Due: February 15, 2025
-        ");
-
-        Console.WriteLine($"\nResult:\n{result}");
+        var result = await workflow.RunAsync("INVOICE #123 (URGENT)");
+        Console.WriteLine($"Result: {result}");
     }
 }
