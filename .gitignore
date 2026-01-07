@@ -1,0 +1,13 @@
+.env
+.env.local
+__pycache__/
+*.pyc
+.venv/
+venv/
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.idea/
+*.log
